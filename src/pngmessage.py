@@ -51,16 +51,29 @@ def message_encoder(TextFile, AllowedCharacters):
 
 def read_source(SourceFile):
     """Reads PNG file source and performs quick conversion.
+
+    Arguments:
+        SourceFile      --      source of PNG file
+
+    Returns
+        pngData         --      RGBA information of file
     """
     pass
 
-def write_target(TargetFile):
-    """Writes the final result to the output PNG file.
-    Also performs verification.
+def write_target(TargetFile, BinaryData, PNGData):
+    """Performs message encoding on PNG data whilst creating
+    a new file.  Does a single-pass with opacity confirmation.
+
+    Arguments:
+        BinaryData      --      ascii binary information to encode
+        PNGData         --      original PNG file to encode message onto
+
+    Returns:
+        encodedPNG      --      encoded PNG file to write
     """
     pass
-
-# format(ord('c'), '08b')
 
 if __name__ == "__main__":
-    pass
+    args = _parser.parse_args()
+    pngData = read_source(args.source)
+    binaryData = message_encoder(args.input, 0)
