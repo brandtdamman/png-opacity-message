@@ -55,10 +55,14 @@ def read_source(SourceFile):
     Arguments:
         SourceFile      --      source of PNG file
 
-    Returns
+    Returns:
         pngData         --      RGBA information of file
+        dataLength      --      allocated information limit
     """
-    pass
+    reader = png.Reader(filename=SourceFile)
+    pngData = reader.asRGBA()
+    exit()
+    return (None, 0)
 
 def write_target(TargetFile, BinaryData, PNGData):
     """Performs message encoding on PNG data whilst creating
@@ -71,9 +75,9 @@ def write_target(TargetFile, BinaryData, PNGData):
     Returns:
         encodedPNG      --      encoded PNG file to write
     """
-    pass
+    return (None)
 
 if __name__ == "__main__":
     args = _parser.parse_args()
-    pngData = read_source(args.source)
-    binaryData = message_encoder(args.input, 0)
+    pngData, dataLength = read_source(args.source)
+    binaryData = message_encoder(args.input, dataLength)
