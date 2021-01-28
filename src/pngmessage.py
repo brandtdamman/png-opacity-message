@@ -61,6 +61,7 @@ def read_source(SourceFile):
     """
     reader = png.Reader(filename=SourceFile)
     pngData = reader.asRGBA()
+    print(pngData)
     exit()
     return (None, 0)
 
