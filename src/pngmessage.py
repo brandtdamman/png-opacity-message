@@ -63,11 +63,11 @@ def message_encoder(TextFile, AllowedCharacters):
                     text.append(True)
 
             # Make sure we stay within boundries.
-            # if len(text) / 8 >= AllowedCharacters:
-            #     # Avoid going beyond the image size.
-            #     print("Not all information was stored in the image.")
-            #     overload = True
-            #     break
+            if len(text) / 8 >= AllowedCharacters:
+                # Avoid going beyond the image size.
+                print("Not all information was stored in the image.")
+                overload = True
+                break
 
         if overload:
             break
