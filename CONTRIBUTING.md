@@ -1,6 +1,6 @@
-# Contributing to <REPO>
+# Contributing to PNG Opacity Message
 
-Welcome and thanks for considering to contribute to <REPO>.
+Welcome and thanks for considering to contribute to PNG Opacity Message.
 This document outlines some general guidelines related to how to best contribute to the project.
 When you're ready to contribute towards the project, please feel free to prepare a pull request.
 
@@ -23,9 +23,12 @@ The coding conventions set here should be fairly quick to become accustomed with
 Below is a gist of the conventions used.
 When in doubt, aim for readability.
 
-### LANGUAGE
+### Python
 
-- STUFF
+- Function names are \_underscore\_.
+- Function parameters are CapitalCase.
+- Local scope variables are camelCase.
+- Global variables are all private.
 
 ### Markdown
 
@@ -47,8 +50,8 @@ Make sure to reference any open issue or related documents, where applicable, on
 
 ### Pull Requests
 
-Except in extreme cases, pull requests will generally be reviewed within a seven-day window.
-Make sure to state all chances and reference any issues and related documents where necessary.
+This project is mostly "done" and won't be monitored often.
+If there is a pull request that hasn't been commented on within fourteen (14) days, feel free to send me an email (see profile).
 
 ## Remarks
 
