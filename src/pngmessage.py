@@ -12,6 +12,8 @@ _parser.add_argument('-o', '--output', type=str, help='Location and filename for
     desired output file.', required=True)
 _parser.add_argument('-i', '--source', type=str, help='Location and filename for \
     desired input PNG.  Please input a PNG only.', required=True)
+_parser.add_argument('--opacity', type=int, const=1, help='Denotes the 0-bit \
+    opacity (cannot be 255)', nargs='?')
 
 def message_encoder(TextFile, AllowedCharacters):
     """Takes the source text file and converts to 8-bit binary.
@@ -74,9 +76,6 @@ def message_encoder(TextFile, AllowedCharacters):
 
     # TODO: Print confirmation message for empty buffer
     # of more than 25% of available image real estate.
-    print(AllowedCharacters)
-    print(len(text) / 8)
-    exit()
     return text
 
 def read_source(SourceFile):
@@ -98,7 +97,7 @@ def read_source(SourceFile):
 
     return (pngData, pngData[0] / 8 * pngData[1])
 
-def write_target(TargetFile, BinaryData, PNGData):
+def write_target(TargetFile, BinaryData, PNGData, Opacity=128):
     """Performs message encoding on PNG data whilst creating
     a new file.  Does a single-pass with opacity confirmation.
 
@@ -107,7 +106,7 @@ def write_target(TargetFile, BinaryData, PNGData):
         PNGData         --      original PNG file to encode message onto
 
     Returns:
-        encodedPNG      --      encoded PNG file to write
+        None
     """
     # Data format: make list from index 2 generator, every index 3 is alpha
     pngRGBA = list(PNGData[2])
@@ -123,7 +122,7 @@ def write_target(TargetFile, BinaryData, PNGData):
             if BinaryData[binIndex]:
                 line[index] = 255
             else:
-                line[index] = 128
+                line[index] = Opacity
             
             index += 4
             binIndex += 1
@@ -142,4 +141,4 @@ if __name__ == "__main__":
     args = _parser.parse_args()
     pngData, dataLength = read_source(args.source)
     binaryData = message_encoder(args.input, dataLength)
-    encodedPNG = write_target(args.output, binaryData, pngData)
+    encodedPNG = write_target(args.output, binaryData, pngData, args.opacity)
