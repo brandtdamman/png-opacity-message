@@ -71,7 +71,19 @@ def message_encoder(TextFile, AllowedCharacters):
                 overload = True
                 break
 
+        # Secondary statement needed.
         if overload:
+            break
+
+        if line != lines[-1]:
+            for bit in format(ord("\n"), '08b'):
+                # Ternary.  WOO!
+                text.append(False if bit == '0' else True)
+
+        # Make sure we stay within boundries.
+        if len(text) / 8 >= AllowedCharacters:
+            # Avoid going beyond the image size.
+            print("Not all information was stored in the image.")
             break
 
     # TODO: Print confirmation message for empty buffer
