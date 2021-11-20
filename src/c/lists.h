@@ -6,6 +6,7 @@
 #include <wchar.h>
 
 #define BYTE_SIZE 8
+#define DATA_SIZE 2
 
 // structures
 typedef struct char_node_t char_node_t;
@@ -28,6 +29,7 @@ struct segment_node_t {
 //? Char Nodes
 char_node_t* create_head_char_node();
 char_node_t* add_char_node(char_node_t* TAIL, wchar_t* data);
+void print_char_nodes(char_node_t* HEAD);
 
 //? Segment Nodes
 segment_node_t* create_head_segment_node();

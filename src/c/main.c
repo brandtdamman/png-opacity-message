@@ -11,6 +11,7 @@
  * Originally designed for IASTATE MATH424 - Introduction to High Performance Computing
  */
 #include "main.h"
+#include "lists.h"
 
 int main(int argc, char *argv[])
 {
@@ -24,12 +25,14 @@ int main(int argc, char *argv[])
     const char* output_file = argv[3];
 
     // Inform OMP it isn't allowed to make _more_ threads.
-    omp_set_nested(1);
-    omp_set_dynamic(0);
+    // omp_set_nested(1);
+    // omp_set_dynamic(0);
 
     // 1. Load text from file, character by character.
-    char* text;
-    read_file()
+    char_node_t* HEAD = create_head_char_node();
+    read_file(HEAD, "test/input.txt");
+
+    print_char_nodes(HEAD);
 
     return 0;
 }

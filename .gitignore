@@ -9,6 +9,7 @@ __pycache__/
 # Test files
 docs/Project\ Gutenberg
 docs/dev.md
+*.exe
 
 # C extensions
 *.so
