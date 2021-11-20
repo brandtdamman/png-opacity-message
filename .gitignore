@@ -10,6 +10,7 @@ __pycache__/
 docs/Project\ Gutenberg
 docs/dev.md
 *.exe
+WarAndPeace_2600-0_ProjectGutenberg.txt
 
 # C extensions
 *.so

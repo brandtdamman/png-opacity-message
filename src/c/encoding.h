@@ -8,8 +8,8 @@
 #include <stdio.h>
 #include <wchar.h>
 
-void read_file(char_node_t* HEAD, const char* filename);
+int read_file(wchar_t** retData, const char* filename);
 void convert_text(char* text, const char* locale);
-
+FILE* open_file(const char* filename);
 
 #endif

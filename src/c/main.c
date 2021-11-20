@@ -29,16 +29,16 @@ int main(int argc, char *argv[])
     // omp_set_dynamic(0);
 
     // 1. Load text from file, character by character.
-    char_node_t* HEAD = create_head_char_node();
-    read_file(HEAD, "test/input.txt");
+    wchar_t* text_data;
+    int char_count = read_file(&text_data, text_file);
 
-    print_char_nodes(HEAD);
+    // 2. (Parallel) Decompose text into binary data.
 
     return 0;
 }
 
 /*
-    Details required and optional CLI arguments.
+    Details the required and optional CLI arguments.
 
     :param prog_name: name of the program
     :type prog_name: char*
