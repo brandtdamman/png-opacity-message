@@ -1,6 +1,6 @@
 #include "encoding.h"
 
-int read_file(wchar_t** retData, const char* filename) {
+int read_file(int** retData, const char* filename) {
     FILE* input;
     wchar_t curr[2];
 
@@ -20,14 +20,23 @@ int read_file(wchar_t** retData, const char* filename) {
     }
 
     printf("count = %d\n", count);
+    fclose(input);
 
     input = open_file(filename);
-    *retData = (wchar_t*)malloc(sizeof(wchar_t) * count);
-    while (fgetws(*retData, count, input) != NULL) {
-        wprintf(L"%s", *retData);
+    wchar_t* data = (wchar_t*)malloc(sizeof(wchar_t) * count);
+    int i = 0;
+    while (fgetws(curr, 2, input) != NULL) {
+        data[i++] = curr[0];
+        //wprintf(L"%s", curr);
+//         wprintf(L"%s", *retData);
     }
-
-    fprintf(stdout, "\n");
+//
+//    for (i = 0; i < 10; i++) {
+//        fprintf(stdout, "%c\n", data[i]);
+//    }
+//
+//    fprintf(stdout, "\n");
+    *retData = data;
     return count;
 }
 
@@ -40,11 +49,37 @@ FILE* open_file(const char* filename) {
     return input;
 }
 
-void convert_text(char* text, const char* locale) {
+void convert_text(wchar_t* text_data, const int char_count, bin_data_t** bin_data) {
     //! Use OMP nested threads.
+
+    // do it serial first.
+
+    //? determine ranges to utilize.
+
+    // allocate.  Definitely memory intensive at the moment...
+    *bin_data = (bin_data_t*)malloc(sizeof(bin_data_t) * char_count);
+
+    //* Decompose!
+    int i, j;
+    for (i = 0; i < char_count; i++) {
+        int* tempData = inttobin(text_data[i]);
+        char* tempStr = inttob(text_data[i]);
+        
+        for (j = 0; j < BYTE_SIZE; j++)
+            (*bin_data)[i].data[j] = tempData[j];
+        
+//        wchar_t* charSeq[2];
+//        charSeq[0] = (wchar_t)text_data[i];
+//        charSeq[1] = '\0';
+//        wprintf(L"%s\t", charSeq);
+//        fprintf(stdout, tempStr);
+    }
+
+    // Don't need this anymore.
+    free(text_data);
 }
 
-int* wchartobin(wchar_t val) {
+int* inttobin(int val) {
     int* retVal = (int*)malloc(sizeof(int) * (BYTE_SIZE));
 
     int curr = val;
@@ -63,8 +98,9 @@ int* wchartobin(wchar_t val) {
     return retVal;
 }
 
+/* FOR DEBUGGING PURPOSES. */
 char* inttob(int val) {
-    char* retVal = (char*)malloc(sizeof(char) * (BYTE_SIZE + 1));
+    char* retVal = (char*)malloc(sizeof(char) * (BYTE_SIZE + 2));
 
     int curr = val;
 
@@ -81,6 +117,7 @@ char* inttob(int val) {
         }
     }
 
-    retVal[BYTE_SIZE] = '\0';
+    retVal[BYTE_SIZE] = '\n';
+    retVal[BYTE_SIZE + 1] = '\0';
     return retVal;
 }

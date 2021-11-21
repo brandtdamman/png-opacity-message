@@ -11,7 +11,8 @@
  * Originally designed for IASTATE MATH424 - Introduction to High Performance Computing
  */
 #include "main.h"
-#include "lists.h"
+
+#include <time.h>
 
 int main(int argc, char *argv[])
 {
@@ -29,11 +30,25 @@ int main(int argc, char *argv[])
     // omp_set_dynamic(0);
 
     // 1. Load text from file, character by character.
-    wchar_t* text_data;
+    clock_t begin = clock();
+
+    int* text_data;
     int char_count = read_file(&text_data, text_file);
+    clock_t end = clock();
+    double reading = (double)(end - begin) / CLOCKS_PER_SEC;
 
     // 2. (Parallel) Decompose text into binary data.
+    begin = clock();
 
+    bin_data_t* decomposed_data;
+    convert_text(text_data, char_count, &decomposed_data);
+    end = clock();
+    double converting = (double)(end - begin) / CLOCKS_PER_SEC;
+
+    fprintf(stdout, "\nEstimated times (in seconds)\n================================\n");
+    fprintf(stdout, "I/O Read\t=\t%lf\n", reading);
+    fprintf(stdout, "Converting\t=\t%lf\n", converting);
+    fprintf(stdout, "================================\n\n");
     return 0;
 }
 
