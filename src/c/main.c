@@ -48,6 +48,8 @@ int main(int argc, char *argv[])
     // 3. Load image data.  Painfully.
     begin = clock();
 
+    image_t* im_data;
+    read_image(&im_data, image_file);
     end = clock();
     double image_load = (double)(end - begin) / CLOCKS_PER_SEC;
 

@@ -19,7 +19,7 @@ int read_file(int** retData, const char* filename) {
         // printf("%s\n", binary);
     }
 
-    printf("count = %d\n", count);
+    // printf("count = %d\n", count);
     fclose(input);
 
     input = open_file(filename);
@@ -27,13 +27,13 @@ int read_file(int** retData, const char* filename) {
     int i = 0;
     while (fgetws(curr, 2, input) != NULL) {
         data[i++] = curr[0];
-        //wprintf(L"%s", curr);
+        wprintf(L"%s", curr);
 //         wprintf(L"%s", *retData);
     }
 //
-//    for (i = 0; i < 10; i++) {
-//        fprintf(stdout, "%c\n", data[i]);
-//    }
+    // for (i = 0; i < 10; i++) {
+    //     fprintf(stdout, "%c\n", data[i]);
+    // }
 //
 //    fprintf(stdout, "\n");
     *retData = data;
