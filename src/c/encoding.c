@@ -7,7 +7,9 @@ int read_file(int** retData, const char* filename) {
     // CHANGE DEPENDING ON REGION.
     setlocale(LC_CTYPE, "en-US.UTF-8");
 
-    input = open_file(filename);
+    // input = open_file(filename);
+    if ((input = fopen(filename, "r")) == NULL)
+        return 0;
 
     // char_node_t* node = HEAD;
     int count = 0;
@@ -15,19 +17,21 @@ int read_file(int** retData, const char* filename) {
     while (fgetws(curr, 2, input) != NULL) {
         // node = add_char_node(node, curr);
         count += 1;
-        // wprintf(L"%s\n", curr);
+        wprintf(L"%s\n", curr);
         // printf("%s\n", binary);
     }
 
     // printf("count = %d\n", count);
     fclose(input);
 
-    input = open_file(filename);
+    // input = open_file(filename);
+    if ((input = fopen(filename, "r")) == NULL)
+        return 0;
     wchar_t* data = (wchar_t*)malloc(sizeof(wchar_t) * count);
     int i = 0;
-    while (fgetws(curr, 2, input) != NULL) {
+    while (fgetws(data, 2, input) != NULL) {
         data[i++] = curr[0];
-        wprintf(L"%s", curr);
+        // wprintf(L"%s\n", curr);
 //         wprintf(L"%s", *retData);
     }
 //
@@ -37,6 +41,7 @@ int read_file(int** retData, const char* filename) {
 //
 //    fprintf(stdout, "\n");
     *retData = data;
+    wprintf(L"%d\n", count);
     return count;
 }
 

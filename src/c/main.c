@@ -53,11 +53,11 @@ int main(int argc, char *argv[])
     end = clock();
     double image_load = (double)(end - begin) / CLOCKS_PER_SEC;
 
-    fprintf(stdout, "\nEstimated times (in seconds)\n================================\n");
-    fprintf(stdout, "I/O Read\t=\t%lf\n", reading);
-    fprintf(stdout, "Converting\t=\t%lf\n", converting);
-    fprintf(stdout, "Image I/O\t=\t%lf\n", image_load);
-    fprintf(stdout, "================================\n\n");
+    wprintf(L"\nEstimated times (in seconds)\n================================\n");
+    wprintf(L"I/O Read\t=\t%lf\n", reading);
+    wprintf(L"Converting\t=\t%lf\n", converting);
+    wprintf(L"Image I/O\t=\t%lf\n", image_load);
+    wprintf(L"================================\n\n");
     return 0;
 }
 

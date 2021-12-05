@@ -1,7 +1,7 @@
 CC = gcc
-FFLAGS = -Wall -g
-LFLAGS = -lm -g
-OBJECTS = main.o encoding.o
+FFLAGS = -Wall
+LFLAGS = -lm -lpng
+OBJECTS = main.o image.o encoding.o
 
 .PHONY: clean
 
