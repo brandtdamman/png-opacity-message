@@ -1,23 +1,29 @@
 #include "encoding.h"
 
+#define MAXC 100
+#define CURRSIZE 2
+
 int read_file(int** retData, const char* filename) {
     FILE* input;
-    wchar_t curr[2];
+    wchar_t curr[CURRSIZE];
 
     // CHANGE DEPENDING ON REGION.
     setlocale(LC_CTYPE, "en-US.UTF-8");
+    // setlocale(LC_ALL, "French_Canada.1252");
 
     // input = open_file(filename);
+    wprintf(L"%s\n", filename);
     if ((input = fopen(filename, "r")) == NULL)
         return 0;
 
     // char_node_t* node = HEAD;
     int count = 0;
     //* once to get number of characters.
-    while (fgetws(curr, 2, input) != NULL) {
+    while (fgets(curr, CURRSIZE, input) != NULL) {
         // node = add_char_node(node, curr);
         count += 1;
-        wprintf(L"%s\n", curr);
+        // wprintf(L"Blah\n");
+        // wprintf(L"%s", curr);
         // printf("%s\n", binary);
     }
 
@@ -27,9 +33,10 @@ int read_file(int** retData, const char* filename) {
     // input = open_file(filename);
     if ((input = fopen(filename, "r")) == NULL)
         return 0;
+    // wprintf(L"Blah\n");
     wchar_t* data = (wchar_t*)malloc(sizeof(wchar_t) * count);
     int i = 0;
-    while (fgetws(data, 2, input) != NULL) {
+    while (fgets(curr, 2, input) != NULL) {
         data[i++] = curr[0];
         // wprintf(L"%s\n", curr);
 //         wprintf(L"%s", *retData);
@@ -68,16 +75,12 @@ void convert_text(wchar_t* text_data, const int char_count, bin_data_t** bin_dat
     int i, j;
     for (i = 0; i < char_count; i++) {
         int* tempData = inttobin(text_data[i]);
-        char* tempStr = inttob(text_data[i]);
+        // char* tempStr = inttob(text_data[i]);
         
         for (j = 0; j < BYTE_SIZE; j++)
             (*bin_data)[i].data[j] = tempData[j];
-        
-//        wchar_t* charSeq[2];
-//        charSeq[0] = (wchar_t)text_data[i];
-//        charSeq[1] = '\0';
-//        wprintf(L"%s\t", charSeq);
-//        fprintf(stdout, tempStr);
+
+        // wprintf(L"%c --> %s", text_data[i], tempStr);
     }
 
     // Don't need this anymore.
