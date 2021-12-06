@@ -17,13 +17,17 @@
 int main(int argc, char *argv[])
 {
     // Validation CLI args.
-    if (argc != 4)
+    if (argc != 5)
         usage(argv[0]);
 
     // Obtain filenames from the args.
     const char* text_file = argv[1];
     const char* image_file = argv[2];
     const char* output_file = argv[3];
+    const int opacity_value = strtol(argv[4], NULL, 10);
+
+    if (opacity_value < 0 || opacity_value > 254)
+        usage(argv[0]);
 
     // Inform OMP it isn't allowed to make _more_ threads.
     // omp_set_nested(1);
@@ -45,7 +49,7 @@ int main(int argc, char *argv[])
     end = clock();
     double converting = (double)(end - begin) / CLOCKS_PER_SEC;
 
-    // 3. Load image data.  Painfully.
+    // 3. Load image data.
     begin = clock();
 
     image_t* im_data;
@@ -53,10 +57,26 @@ int main(int argc, char *argv[])
     end = clock();
     double image_load = (double)(end - begin) / CLOCKS_PER_SEC;
 
+    // 4. (Parallel) Do the space magic!
+    begin = clock();
+
+    encode_data(decomposed_data, im_data, opacity_value);
+    end = clock();
+    double encode_data = (double)(end - begin) / CLOCKS_PER_SEC;
+
+    // 5. Write image data.
+    begin = clock();
+
+    save(im_data, output_file);
+    end = clock();
+    double image_save = (double)(end - begin) / CLOCKS_PER_SEC;
+
     wprintf(L"\nEstimated times (in seconds)\n================================\n");
     wprintf(L"I/O Read\t=\t%lf\n", reading);
     wprintf(L"Converting\t=\t%lf\n", converting);
-    wprintf(L"Image I/O\t=\t%lf\n", image_load);
+    wprintf(L"Image Read\t=\t%lf\n", image_load);
+    wprintf(L"Opacity Encode\t=\t%lf\n", encode_data);
+    wprintf(L"Image Save\t=\t%lf\n", image_save);
     wprintf(L"================================\n\n");
     return 0;
 }
@@ -69,8 +89,9 @@ int main(int argc, char *argv[])
  */
 void usage(const char *prog_name)
 {
-    fprintf(stderr, "usage: %s <text_file> <image_file> <output_file>\n", prog_name);
+    fprintf(stderr, "usage: %s <text_file> <image_file> <output_file> <opacity>\n", prog_name);
     fprintf(stderr, "\tBoth text_file and image_file should exist.\n");
     fprintf(stderr, "\tEnsure write permissions are available for output_file.\n");
+    fprintf(stderr, "\tOpacity value must be between 0-254.\n");
     exit(1);
 }
