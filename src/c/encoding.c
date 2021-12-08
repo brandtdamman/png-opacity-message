@@ -12,7 +12,7 @@ int read_file(int** retData, const char* filename) {
     // setlocale(LC_ALL, "French_Canada.1252");
 
     // input = open_file(filename);
-    wprintf(L"%s\n", filename);
+    // wprintf(L"%s\n", filename);
     if ((input = fopen(filename, "r")) == NULL)
         return 0;
 
@@ -48,7 +48,7 @@ int read_file(int** retData, const char* filename) {
 //
 //    fprintf(stdout, "\n");
     *retData = data;
-    wprintf(L"%d\n", count);
+    // wprintf(L"%d\n", count);
     return count;
 }
 
@@ -61,30 +61,49 @@ FILE* open_file(const char* filename) {
     return input;
 }
 
-void convert_text(wchar_t* text_data, const int char_count, bin_data_t** bin_data) {
-    //! Use OMP nested threads.
-
-    // do it serial first.
-
-    //? determine ranges to utilize.
-
+void convert_text(wchar_t* text_data, const int char_count, bin_data_t** bin_data,
+                    const int num_threads) {
     // allocate.  Definitely memory intensive at the moment...
     *bin_data = (bin_data_t*)malloc(sizeof(bin_data_t) * char_count);
 
-    //* Decompose!
-    int i, j;
-    for (i = 0; i < char_count; i++) {
-        int* tempData = inttobin(text_data[i]);
-        // char* tempStr = inttob(text_data[i]);
-        
-        for (j = 0; j < BYTE_SIZE; j++)
-            (*bin_data)[i].data[j] = tempData[j];
+    void find_range(int* start, int* stop, const int thread_count,
+                    const int numChars, const int rank);
 
-        // wprintf(L"%c --> %s", text_data[i], tempStr);
-    }
+    //* Decompose!
+    // #pragma omp parallel num_threads(num_threads)
+    // {
+    //     int sIdx, eIdx;
+    //     const int rank = omp_get_thread_num();
+    //     find_range(&sIdx, &eIdx, num_threads, char_count, rank);
+    //     wprintf(L"Thread %d:\tstart: %d\tend:%d\n", rank, sIdx, eIdx);
+
+        int i, j;
+        #pragma omp parallel for num_threads(num_threads)
+        for (i = 0; i < char_count; i++) {
+            int* tempData = inttobin(text_data[i]);
+
+            for (j = 0; j < BYTE_SIZE; j++)
+                (*bin_data)[i].data[j] = tempData[j];
+        }
+    // }
+    
 
     // Don't need this anymore.
     free(text_data);
+}
+
+void find_range(int* start, int* stop, const int thread_count,
+                const int numChars, const int rank) {
+    int interval_size = numChars / thread_count;
+
+    *start = interval_size * rank + 1;
+
+    if (numChars % thread_count == 0 || rank + 1 != thread_count) {
+        *stop = interval_size * (rank + 1);
+        return;
+    }
+
+    *stop = numChars;
 }
 
 int* inttobin(int val) {

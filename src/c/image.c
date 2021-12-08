@@ -72,7 +72,8 @@ void read_image(image_t **im_data, const char *file_name)
     fclose(fp);
 }
 
-void encode_data(bin_data_t *bin_data, image_t *im_data, const int opacity)
+void encode_data(bin_data_t *bin_data, image_t *im_data, const int opacity,
+                    const int thread_count)
 {
     if (png_get_color_type(im_data->png_ptr, im_data->info_ptr) == PNG_COLOR_TYPE_RGB)
         wprintf(L"[process_file] input file is PNG_COLOR_TYPE_RGB but must be PNG_COLOR_TYPE_RGBA "
@@ -82,33 +83,57 @@ void encode_data(bin_data_t *bin_data, image_t *im_data, const int opacity)
         wprintf(L"[process_file] color_type of input file must be PNG_COLOR_TYPE_RGBA (%d) (is %d)",
                 PNG_COLOR_TYPE_RGBA, png_get_color_type(im_data->png_ptr, im_data->info_ptr));
 
-    //! Presentation purposes only, change ASAP
-    int i = 0;
-    int subI = 0;
+    // // Presentation purposes only, change ASAP
+    // int i = 0;
+    // int subI = 0;
 
-    for (int y = 0; y < im_data->height; y++)
-    {
-        png_byte *row = im_data->row_pointers[y];
-        for (int x = 0; x < im_data->width/* * 2*/; x++)
-        {
-            png_byte *ptr = &(row[x * 4]);
-            // wprintf(L"Pixel at position [ %d - %d ] has RGBA values: %d - %d - %d - %d\n",
-            //         x, y, ptr[0], ptr[1], ptr[2], ptr[3]);
+    // int x;
+    // // #pragma omp parallel for num_threads(thread_count) private(x)
+    // for (int y = 0; y < im_data->height; y++)
+    // {
+    //     png_byte *row = im_data->row_pointers[y];
+    //     for (x = 0; x < im_data->width/* * 2*/; x++)
+    //     {
+    //         png_byte *ptr = &(row[x * 4]);
+    //         // wprintf(L"Pixel at position [ %d - %d ] has RGBA values: %d - %d - %d - %d\n",
+    //         //         x, y, ptr[0], ptr[1], ptr[2], ptr[3]);
 
-            /* set red value to 0 and green value to the blue one */
-            // ptr[0] = 0;
-            // ptr[1] = ptr[2];
+    //         /* set red value to 0 and green value to the blue one */
+    //         // ptr[0] = 0;
+    //         // ptr[1] = ptr[2];
             
-            //* Change the opacity!
-            if (bin_data[i].data[subI] == 1) {
+    //         //* Change the opacity!
+    //         long charPos = x + (y * im_data->width);
+    //         if (bin_data[charPos / 8].data[charPos % 8] == 1) {
+    //             ptr[3] = 255;
+    //         } else {
+    //             ptr[3] = opacity;
+    //         }
+
+    //         // subI = (subI + 1) % 8;
+    //         // if (subI == 0)
+    //         //     i++;
+    //     }
+    // }
+
+    #pragma omp parallel num_threads(thread_count) shared(bin_data)
+    {
+        int area = im_data->width * im_data->height;
+        int rank = omp_get_thread_num();
+        // #pragma omp for
+        for (int pos = rank; pos < area; pos += thread_count) {
+            int y = pos / im_data->width;
+            int x = pos % im_data->width;
+
+            png_byte* ptr = &(im_data->row_pointers[y][x * 4]);
+            
+            int pixel = pos / 8;
+            int subPixel = pos % 8;
+            if (bin_data[pixel].data[subPixel] == 1) {
                 ptr[3] = 255;
             } else {
                 ptr[3] = opacity;
             }
-
-            subI = (subI + 1) % 8;
-            if (subI == 0)
-                i++;
         }
     }
 }

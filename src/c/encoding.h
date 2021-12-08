@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <wchar.h>
 
+#include <omp.h>
+
 #define BYTE_SIZE 8
 
 typedef struct bin_data_t bin_data_t;
@@ -16,7 +18,8 @@ struct bin_data_t {
 };
 
 int read_file(int** retData, const char* filename);
-void convert_text(wchar_t* text_data, const int char_count, bin_data_t** bin_data);
+void convert_text(wchar_t* text_data, const int char_count, bin_data_t** bin_data,
+                    const int num_threads);
 
 FILE* open_file(const char* filename);
 int* inttobin(int val);

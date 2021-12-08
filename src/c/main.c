@@ -14,10 +14,12 @@
 
 #include <time.h>
 
+// #define THREADS 2
+
 int main(int argc, char *argv[])
 {
     // Validation CLI args.
-    if (argc != 5)
+    if (argc != 6)
         usage(argv[0]);
 
     // Obtain filenames from the args.
@@ -25,13 +27,14 @@ int main(int argc, char *argv[])
     const char* image_file = argv[2];
     const char* output_file = argv[3];
     const int opacity_value = strtol(argv[4], NULL, 10);
+    const int THREADS = strtol(argv[5], NULL, 10);
 
     if (opacity_value < 0 || opacity_value > 254)
         usage(argv[0]);
 
     // Inform OMP it isn't allowed to make _more_ threads.
-    // omp_set_nested(1);
-    // omp_set_dynamic(0);
+    omp_set_nested(1);
+    omp_set_dynamic(0);
 
     // 1. Load text from file, character by character.
     clock_t begin = clock();
@@ -42,12 +45,14 @@ int main(int argc, char *argv[])
     double reading = (double)(end - begin) / CLOCKS_PER_SEC;
 
     // 2. (Parallel) Decompose text into binary data.
-    begin = clock();
+    // begin = clock();
+    double begin_omp = omp_get_wtime();
 
     bin_data_t* decomposed_data;
-    convert_text(text_data, char_count, &decomposed_data);
-    end = clock();
-    double converting = (double)(end - begin) / CLOCKS_PER_SEC;
+    convert_text(text_data, char_count, &decomposed_data, THREADS);
+    // end = clock();
+    double end_omp = omp_get_wtime();
+    double converting = end_omp - begin_omp;
 
     // 3. Load image data.
     begin = clock();
@@ -60,7 +65,7 @@ int main(int argc, char *argv[])
     // 4. (Parallel) Do the space magic!
     begin = clock();
 
-    encode_data(decomposed_data, im_data, opacity_value);
+    encode_data(decomposed_data, im_data, opacity_value, THREADS);
     end = clock();
     double encode_data = (double)(end - begin) / CLOCKS_PER_SEC;
 

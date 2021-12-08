@@ -1,6 +1,6 @@
 CC = gcc
-FFLAGS = -Wall
-LFLAGS = -lm -lpng
+FFLAGS = -Wall -fopenmp
+LFLAGS = -lm -lpng -lgomp
 OBJECTS = main.o image.o encoding.o
 
 .PHONY: clean

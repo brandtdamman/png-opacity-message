@@ -24,7 +24,8 @@ struct image_t {
 
 // Credit to http://zarb.org/~gc/html/libpng.html for the beautiful example of PNG loading, processing, and writing.
 void read_image(image_t** im_data, const char* file_name);
-void encode_data(bin_data_t* bin_data, image_t* im_data, const int opacity);
+void encode_data(bin_data_t* bin_data, image_t* im_data, const int opacity,
+                    const int thread_count);
 void save(image_t* im_data, const char* file_name);
 
 #endif
