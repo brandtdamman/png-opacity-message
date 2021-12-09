@@ -8,9 +8,16 @@ __pycache__/
 
 # Test files
 docs/Project\ Gutenberg
+docs/dev.md
+*.exe
+WarAndPeace_2600-0_ProjectGutenberg.txt
+.idea/
 
 # C extensions
 *.so
+*.o
+gmon.out
+CMakeLists.txt
 
 # Distribution / packaging
 .Python
