@@ -43,9 +43,6 @@ A Wayback link is waived if related to the purposes of license information or ot
 
 ### Commit Messages
 
-- Keep the first commit line to 50 characters, plus or minus 10 characters
-- Emojis are acceptable but generally not used
-
 Make sure to reference any open issue or related documents, where applicable, on following lines.
 
 ### Pull Requests
@@ -57,4 +54,5 @@ If there is a pull request that hasn't been commented on within fourteen (14) da
 
 Thank you again and happy coding!
 
--> Brandt Damman
+-> Daryl Damman
+
